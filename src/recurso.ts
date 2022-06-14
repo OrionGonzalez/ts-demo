@@ -1,7 +1,7 @@
-interface IRecurso {
+export interface IRecurso {
     // ...
 }
-class Recurso implements IRecurso{
+export class Recurso implements IRecurso{
     constructor(blob: Blob) {
         // Convertir a recurso etc
         blob
