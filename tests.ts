@@ -9,5 +9,6 @@ describe('Tests de cloud', () => {
         const recurso = await cloud.getRecursoAsync("web correcta")
         expect(typeof recurso).toBe("IRecurso");    
         // expect(recurso.propiedad noseque).toBe(algo que sepamos que tiene que tener)
+        
     })
 });

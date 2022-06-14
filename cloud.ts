@@ -1,15 +1,32 @@
 interface ICloud {
-	getRecursoAsync(url: string): Promise<IRecurso | undefined>;
+    getRecursoAsync(url: string): Promise<IRecurso | undefined>;
 }
-interface IRecurso {
-    // ...
+
+
+interface IDescargador{
+    descargarRecurso(url: string): Promise<IRecurso>
 }
-class Recurso implements IRecurso{
-    constructor(blob: Blob) {
-        // Convertir a recurso etc
-        blob
+class Descargador implements IDescargador {
+        static descargarRecurso(url: string): Promise<IRecurso> {
+        return new Promise(function (resolve, reject) {
+            // Get file name from url.
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "blob";
+            xhr.onload = function () {                              
+                resolve(new injector.IRecurso(xhr.response));
+                return;
+            };
+            xhr.onerror = reject;
+            xhr.open("GET", url);
+            xhr.send();
+        });
     }
 }
+
+class cloudInjector{
+    public static IDescargador = Descargador
+}
+
 
 
 class Cloud implements ICloud {
@@ -18,7 +35,7 @@ class Cloud implements ICloud {
 		return new Promise<IRecurso>(async (resolve, reject) => {
 			var recurso = this.recursos.src;
 			if (!recurso) {
-				recurso = await this.descargarRecurso(url);
+				recurso = await cloudInjector.IDescargador.descargarRecurso(url);
 			}
 			if (recurso) {
 				resolve(recurso);
@@ -29,18 +46,5 @@ class Cloud implements ICloud {
 	}
 
 
-	private descargarRecurso(url: string): Promise<IRecurso> {
-		return new Promise(function (resolve, reject) {
-			// Get file name from url.
-			var xhr = new XMLHttpRequest();
-			xhr.responseType = "blob";
-			xhr.onload = function () {                              
-				resolve(new injector.IRecurso(xhr.response));
-				return;
-			};
-			xhr.onerror = reject;
-			xhr.open("GET", url);
-			xhr.send();
-		});
-	}
+	
 }
