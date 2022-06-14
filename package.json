@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "@types/jest": "^28.1.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "jest": "^28.1.1"
   }
 }

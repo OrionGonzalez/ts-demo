@@ -7,7 +7,8 @@ interface IDescargador{
     descargarRecurso(url: string): Promise<IRecurso>
 }
 class Descargador implements IDescargador {
-        static descargarRecurso(url: string): Promise<IRecurso> {
+    constructor(){}
+        descargarRecurso(url: string): Promise<IRecurso> {
         return new Promise(function (resolve, reject) {
             // Get file name from url.
             var xhr = new XMLHttpRequest();
@@ -30,12 +31,13 @@ class cloudInjector{
 
 
 class Cloud implements ICloud {
+    private descargador = new cloudInjector.IDescargador()
 	private recursos: Record<string, IRecurso> = {};
 	public async getRecursoAsync(url: string) {
 		return new Promise<IRecurso>(async (resolve, reject) => {
 			var recurso = this.recursos.src;
 			if (!recurso) {
-				recurso = await cloudInjector.IDescargador.descargarRecurso(url);
+				recurso = await this.descargador.descargarRecurso(url);
 			}
 			if (recurso) {
 				resolve(recurso);
